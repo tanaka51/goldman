@@ -16,27 +16,8 @@ type options struct {
 	Color bool
 }
 
-func validateFileType(filename string, fileTypes []string) bool {
-	if len(fileTypes) == 0 {
-		return true
-	}
-
-	ext := filepath.Ext(filename)
-	for _, ftype := range fileTypes {
-		targetExt := "." + ftype
-		if ext == targetExt {
-			return true
-		}
-	}
-	return false
-}
-
 // grep per file
 func goldman(filename, target string, options *options) error {
-	if !validateFileType(filename, options.FileTypes) {
-		return nil
-	}
-
 	f, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -100,9 +81,6 @@ func parseOptions() (*options, error) {
 	// target directories
 	f.StringVar(&targetDirs, "target-dirs", ".", "specify target dirs. you can use ',' for specify multi value")
 	f.StringVar(&targetDirs, "d", ".", "alias for target-dirs")
-	// file types
-	f.StringVar(&fileTypes, "file-types", "", "specify file types. you can use ',' for specify multi value")
-	f.StringVar(&fileTypes, "f", "", "alias for file-type")
 	// color
 	f.BoolVar(&color, "color", true, "enable color (default true)")
 	f.BoolVar(&color, "c", true, "alias for color")
